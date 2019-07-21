@@ -1,0 +1,27 @@
+body {
+    background-color: rgb(72, 164, 180);
+  }
+  
+  .h {
+    color: white;
+    text-align: center;
+    font-size: 150%;
+  }
+  
+  .container {
+    margin: auto;
+    width: 364px;
+  }
+  .cell {
+    background-color: rgb(216, 223, 224);
+    border: 1px solid;
+    border-color:rgb(72, 164, 180);
+    float: left;
+    height: 50px;
+    width: 50px;
+    border-radius: 2px;
+  }
+  .cell:hover {
+    border-color: white;
+  }
+  
