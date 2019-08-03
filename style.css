@@ -1,27 +1,42 @@
 body {
-    background-color: rgb(72, 164, 180);
-  }
+  background-color: rgb(72, 164, 180);
+}
+
+.info {
+  color: white;
+  text-align: center;
+  font-size: 115%;
+  font-family: sans-serif;
+}
+
+.button {
+  color: rgb(27, 19, 19);
+  text-align: center;
+  font-size: 105%;
+  cursor: pointer;
+  background-color: rgb(204, 230, 132);
+  border-radius: 2px;
+  font-family: sans-serif;
   
-  .h {
-    color: white;
-    text-align: center;
-    font-size: 150%;
-  }
-  
-  .container {
-    margin: auto;
-    width: 364px;
-  }
-  .cell {
-    background-color: rgb(216, 223, 224);
-    border: 1px solid;
-    border-color:rgb(72, 164, 180);
-    float: left;
-    height: 50px;
-    width: 50px;
-    border-radius: 2px;
-  }
-  .cell:hover {
-    border-color: white;
-  }
-  
+}
+
+.button:hover {
+  color: rgb(84, 87, 88);
+}
+
+.container {
+  margin: auto;
+  width: 364px;
+}
+.cell {
+  background-color: rgb(216, 223, 224);
+  border: 1px solid;
+  border-color:rgb(72, 164, 180);
+  float: left;
+  height: 50px;
+  width: 50px;
+  border-radius: 2px;
+}
+.cell:hover {
+  border-color: white;
+}
