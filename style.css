@@ -17,7 +17,7 @@ body {
   background-color: rgb(204, 230, 132);
   border-radius: 2px;
   font-family: sans-serif;
-  
+  user-select: none;
 }
 
 .button:hover {
@@ -27,6 +27,7 @@ body {
 .container {
   margin: auto;
   width: 364px;
+  user-select: none;
 }
 .cell {
   background-color: rgb(216, 223, 224);
@@ -36,7 +37,10 @@ body {
   height: 50px;
   width: 50px;
   border-radius: 2px;
+  font-size: 350%;
+  text-align: center;
+  line-height: 50px;
 }
 .cell:hover {
-  border-color: white;
+  background: rgba(216, 223, 224, 0.842);
 }
