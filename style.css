@@ -37,9 +37,11 @@ body {
   height: 50px;
   width: 50px;
   border-radius: 2px;
-  font-size: 350%;
+  font-size: 300%;
   text-align: center;
   line-height: 50px;
+  font-family: Tahoma, Helvetica, Sans Serif;
+  font-weight: bold;
 }
 .cell:hover {
   background: rgba(216, 223, 224, 0.842);
