@@ -1,8 +1,9 @@
 let field = false,
     countTurn = 0,
-    numToWin = 4, // определяет число эл-в для победы (хххх)
-    sizeField = 7,//определяет размер поля
-    arrField = [];
+    numToWin = 3, // определяет число эл-в для победы (хххх)
+    sizeField = 3,//определяет размер поля
+    arrField = [],
+    iter = 0;
 //кнопка
 button.onclick = function(event) {
   let   info = document.getElementById('info'),
@@ -26,9 +27,10 @@ function startGame() {
   for (let x = 0; x < sizeField; x++) {
     arrField[x] = [];
     for (let j = 0; j <sizeField; j++) {
-      arrField[x][j] = '';
+      arrField[x][j] = x + '-' + j;
     }
   }
+  console.log('arrField: ' + arrField);
 container.onclick = cellClick;
 }
 //проверяет комбинацию по горизонтали и вертикали в заданном секторе
@@ -71,6 +73,7 @@ function makeField() {
       divcell = [];
   divcont.className = 'container';
   divcont.id = 'container';
+  divcont.style.width = sizeField * 52 + 'px'; //формируем контейнер (52 - размер одной ячейки)
   document.body.appendChild(divcont); 
   for (let i = 0; i < sizeField; i++) {
     divcell[i] = [];
@@ -99,15 +102,15 @@ function cellClick(){
     if (!isWinner(arrField,'x')) {
       //пока поле не заполнено ходит алгоритм
       if (countTurn < sizeField*sizeField) {
-      algorithmTurn('easy');
+      algorithmTurn('hard');
       //после хода алгоритма вновь проверяем на победу
       if (isWinner(arrField, 'o')) {
-        alert ('Выйграли О!');
+        setTimeout(function() {alert("Ha-ha! You are loser!");}, 350);
       }
       }
       else alert('Ну надо же! Все поле заполнено, начните заного!');
     }
-    else alert ('winner X!');
+    else setTimeout(function() {alert("Oppa-oppa-pa! You are winner!");}, 350);
     //здесь нужно добавить stop игры
   }
   //при нажатии на занятое поле сигнализируем красным
@@ -129,8 +132,19 @@ function algorithmTurn(level) {
   case 'normal':
     alert( '' );
     break;
-  case 'hard':
-    alert( '' );
+  case 'hard': {
+    let cells = document.getElementsByClassName('cell'),
+        toDoCell = minMax(arrField, 'o').index;
+        busyCell = 'rgba(216, 223, 224, 0.842)';
+    console.log(`куда ставить О: ${toDoCell}`);
+    console.log(`итераций: ${iter}`);
+    cells[toDoCell].innerHTML = 'O';
+    cells[toDoCell].style.backgroundColor = busyCell;
+    let i = +cells[toDoCell].id.replace(/-.*/,''),
+        j = +cells[toDoCell].id.replace(/.*-/,'');
+    arrField[i][j] = 'o';
+    countTurn++;
+  }
     break;
   }
 }
@@ -154,4 +168,93 @@ function turnRandom(){
     countTurn++;
     }
     else turnRandom();
+}
+//минмакс на основе просчета графов всех возможных ходов
+function minMax(tempField, key) {
+  iter++;
+  //работаем с пустым массивом
+  let array = freeField(tempField);
+  //если текущая итерация приводит к результату, то присваиваем очки
+  if (isWinner(tempField, 'x')) {
+    return {
+      score: -10
+    };
+  } else if (isWinner(tempField, 'o')) {
+    return {
+      score: 10
+    };
+  } else if (arrIsEmpty(array)) {
+    return {
+      score: 0
+    };
+  }
+  //обработчик массива, для присвоения 0 очков при ничье
+  function arrIsEmpty(arr) {
+    let count = 0;
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].length === 0) {
+        count++;
+      }
+    }
+    if (count === arr.length) return true;
+  }
+  //формируем массив с объектами вида "координата" - "очки"
+  var moves = [];
+  for (var i = 0; i < array.length; i++) {
+      for (var j = 0; j < array[i].length; j++) {
+      var move = {},
+         x = +(array[i][j].split('-'))[0],
+         y = +(array[i][j].split('-'))[1];
+      //сохраняем позицию 
+      move.index = tempField[x][y];
+      //запоминаем ключ  
+      tempField[x][y] = key;
+      //для о вызываем рекрсию по х и наооборт
+      if (key == 'o') {
+        var f = minMax(tempField, 'x');
+        move.score = f.score;
+      } else {
+        var f = minMax(tempField, 'o');
+        move.score = f.score;
+      }
+    //возвращаем значение  
+    tempField[x][y] = move.index;
+    //записываем объект
+    moves.push(move);
+    }
+  }
+  //выбираем лучший ход
+  var bestMove;
+  if (key === 'o') {
+    var bestScore = -10000;
+    for (var i = 0; i < moves.length; i++) {
+      if (moves[i].score > bestScore) {
+        bestScore = moves[i].score;
+        bestMove = i;
+      }
+    }
+  } else {
+    var bestScore = 10000;
+    for (var i = 0; i < moves.length; i++) {
+      if (moves[i].score < bestScore) {
+        bestScore = moves[i].score;
+        bestMove = i;
+      }
+    }
+  }
+//возвращаем объект с лучшим ходом
+  return moves[bestMove];
+}
+//поиск пустых клеток в массиве (для минмакс ф-ии)
+function freeField(field){
+  let buffer = [];
+  for (let i = 0; i < field.length; i++) {
+    buffer[i] = [];
+    for (let j = 0; j < field[i].length; j++) {
+      if (field[i][j] !== 'o' && field[i][j] !== 'x') {
+        buffer[i].push(field[i][j]);
+      }
+    }
+  }
+  return buffer;
 }
