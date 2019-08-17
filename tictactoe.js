@@ -4,8 +4,9 @@ let field = false,
     sizeField = 3,//определяет размер поля
     arrField = [],
     iter = 0;
+//масштабируемость для агоритма выбора хода минмакс не имеет смысла, но оставлена для возможности расширения
 //кнопка
-button.onclick = function(event) {
+button.onclick = (event) => {
   let   info = document.getElementById('info'),
         button = document.getElementById('button'),
         divcont = document.getElementById('container');
@@ -21,7 +22,7 @@ button.onclick = function(event) {
   }
 };
 //запускает игру
-function startGame() {
+let startGame = () => {
   makeField();
   //заполним массив arrField пустыми значениями для дальнейших манипуляций 
   for (let x = 0; x < sizeField; x++) {
@@ -30,11 +31,11 @@ function startGame() {
       arrField[x][j] = x + '-' + j;
     }
   }
-  console.log('arrField: ' + arrField);
+  console.log(`arrField: ${arrField}`);
 container.onclick = cellClick;
 }
 //проверяет комбинацию по горизонтали и вертикали в заданном секторе
-function ckeckLines(arr, key, x, y) {
+let ckeckLines = (arr, key, x, y) => {
   let cols, rows;
   for (let i = x; i < (numToWin + x); i++) {
     cols = true;
@@ -48,7 +49,7 @@ function ckeckLines(arr, key, x, y) {
   return false;
 }
 //проверяет комбинацию по диагоналям в заданом секторе
-function ckeckDiagonal(arr, key, x, y) {
+let ckeckDiagonal = (arr, key, x, y) => {
   let toright = true,
       toleft = true;
       for (let i = 0; i < numToWin; i++) {
@@ -57,18 +58,18 @@ function ckeckDiagonal(arr, key, x, y) {
       }
       if (toright || toleft) return true;
       return false;
-}
+};
 //проверяет наличие победителя перебором секторов поля
-function isWinner(arr, key) {
+let isWinner = (arr, key) => {
   for (let i = 0; i < (sizeField - numToWin + 1); i++) {
     for (let j = 0; j < (sizeField - numToWin + 1); j++) {
       if (ckeckLines(arr, key, i, j) || ckeckDiagonal(arr, key, i, j)) return true;
     }
   }
   return false;
-}
+};
 //строит поле
-function makeField() {
+let makeField = () => {
   let divcont = document.createElement('div'),
       divcell = [];
   divcont.className = 'container';
@@ -84,9 +85,9 @@ function makeField() {
       divcont.appendChild(divcell[i][j]);
     }
   }
-}
+};
 //обрабатыает клик по полю
-function cellClick(){
+let cellClick = () => {
   let target = event.target,
       busyCell = 'rgba(216, 223, 224, 0.842)',
       cellFree = target.innerHTML == '' ? true : false;
@@ -102,35 +103,35 @@ function cellClick(){
     if (!isWinner(arrField,'x')) {
       //пока поле не заполнено ходит алгоритм
       if (countTurn < sizeField*sizeField) {
-      algorithmTurn('hard');
+      algorithmTurn('hard');//для игры с полем 3*3 интересно играть только в hard, но выйграть нельзя
       //после хода алгоритма вновь проверяем на победу
       if (isWinner(arrField, 'o')) {
-        setTimeout(function() {alert("Ha-ha! You are loser!");}, 350);
+        setTimeout(() => alert("Ha-ha! You are loser!"), 350);
       }
       }
       else alert('Ну надо же! Все поле заполнено, начните заного!');
     }
-    else setTimeout(function() {alert("Oppa-oppa-pa! You are winner!");}, 350);
+    else setTimeout(() => alert("Oppa-oppa-pa! You are winner!"), 350);
     //здесь нужно добавить stop игры
   }
   //при нажатии на занятое поле сигнализируем красным
   else {
     let oldStyle = target.style.backgroundColor; 
     target.style.backgroundColor = 'red';
-    setTimeout( function(){target.style.backgroundColor = oldStyle;}, 100);
+    setTimeout( () => target.style.backgroundColor = oldStyle, 100);
   }
-}
+};
 //ход алгоритма
 //level утстанавливает уровень сложности алгоритма
-//пока реализован только рандом
-function algorithmTurn(level) {
+//пока реализован только рандом и минмакс
+let algorithmTurn = (level) => {
   switch (level) {
   case 'easy': {
     turnRandom();
   }
     break;
   case 'normal':
-    alert( '' );
+    alert( 'В разработке...' );
     break;
   case 'hard': {
     let cells = document.getElementsByClassName('cell'),
@@ -147,15 +148,15 @@ function algorithmTurn(level) {
   }
     break;
   }
-}
+};
 //формирует случайное целое число
-function randomInteger(min, max) {
+let randomInteger = (min, max) => {
   let rand = min + Math.random() * (max + 1 - min);
   return Math.floor(rand);
-  }
+  };
 //легккий уровень алгоритма
-function turnRandom(){
-  let randomcell = randomInteger (0, sizeField - 1) + '-' + randomInteger (0, sizeField - 1),
+let turnRandom = () => {
+  let randomcell = `${randomInteger (0, sizeField - 1)}-${randomInteger (0, sizeField - 1)}`,
   cells = document.getElementsByClassName('cell'),
   busyCell = 'rgba(216, 223, 224, 0.842)',
   freeCell = cells[randomcell].innerHTML =='' ? true: false;
@@ -170,7 +171,7 @@ function turnRandom(){
     else turnRandom();
 }
 //минмакс на основе просчета графов всех возможных ходов
-function minMax(tempField, key) {
+let minMax = (tempField, key) => {
   iter++;
   //работаем с пустым массивом
   let array = freeField(tempField);
@@ -246,7 +247,7 @@ function minMax(tempField, key) {
   return moves[bestMove];
 }
 //поиск пустых клеток в массиве (для минмакс ф-ии)
-function freeField(field){
+let freeField = (field) => {
   let buffer = [];
   for (let i = 0; i < field.length; i++) {
     buffer[i] = [];
