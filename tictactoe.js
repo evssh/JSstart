@@ -33,7 +33,7 @@ let startGame = () => {
   }
   console.log(`arrField: ${arrField}`);
 container.onclick = cellClick;
-}
+};
 //проверяет комбинацию по горизонтали и вертикали в заданном секторе
 let ckeckLines = (arr, key, x, y) => {
   let cols, rows;
@@ -47,7 +47,7 @@ let ckeckLines = (arr, key, x, y) => {
     if (cols || rows) return true;
   }
   return false;
-}
+};
 //проверяет комбинацию по диагоналям в заданом секторе
 let ckeckDiagonal = (arr, key, x, y) => {
   let toright = true,
@@ -169,7 +169,7 @@ let turnRandom = () => {
     countTurn++;
     }
     else turnRandom();
-}
+};
 //минмакс на основе просчета графов всех возможных ходов
 let minMax = (tempField, key) => {
   iter++;
